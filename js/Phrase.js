@@ -6,22 +6,41 @@ class Phrase {
     
     addPhraseToDisplay() { 
         const ul = document.querySelector('ul');
+        let x = 0
         for(let char of this.chars) {
-            char !== " " ? ul.innerHTML += "<li class=letter>" + char + "<li>" : ul.innerHTML += "<li class=space><li>";
-        }
-        
+            
+            if(char !== " ") {
+                ul.innerHTML += "<li class=letter>" + char + "</li>";
+                const li = document.querySelectorAll('.letter')[x];
+                li.classList.add(char);
+                x++;
+            }
+            else {
+                ul.innerHTML += "<li class=space><li>";
+            }
+            
+        } 
         return ul;   
     }
     
     checkLetter(letter) {
+      let numberMatched = 0;
       for(let char of this.chars) {
           if(char === letter) {
-              this.showMatchedLetter();
+              this.showMatchedLetter(letter);
+              numberMatched++;
           }
+      }
+      if(numberMatched === 0) {
+          return 'missed';
       }
     }
     
-    showMatchedLetter() {
+    showMatchedLetter(letter) {
+        const poop = document.getElementsByClassName(letter);
+        for(let pee of poop) {
+            pee.classList.add('show');
+        }
         
     }
 }

@@ -8,7 +8,7 @@ class Game {
     startGame() {
         const startButton = document.getElementById('btn__reset');
         const overlay = document.getElementById('overlay');
-        this.getRandomPhrase();
+        this.activePhrase = this.getRandomPhrase();
         const activePhrase = this.activePhrase;
         startButton.addEventListener('click', function() {
             overlay.style.display = 'none';
@@ -19,19 +19,56 @@ class Game {
     getRandomPhrase() {
         const phrases = this.phrases;
         const randomPhrase = Math.floor(Math.random() * 5);
-        this.activePhrase = phrases[randomPhrase];
-        /*return phrases[randomPhrase];*/
+        return phrases[randomPhrase];
     }
     
-    handleInteraction() {
-        
+    handleInteraction(letter) {
+        const keys = document.getElementsByClassName('key');
+        for(let key of keys) {
+                if(key.textContent === letter) {
+                    key.disabled = true;
+                    if(this.activePhrase.checkLetter(letter) === 'missed') {
+                        this.missed++;
+                        this.removeLife();
+                        key.classList.add('wrong');
+                    }
+                    else {
+                        key.classList.add('chosen');
+                    }
+                }
+        }
     }
+    
+    /*handleInteraction(letter) {
+        const keys = document.getElementsByClassName('key');
+        if(this.activePhrase.checkLetter(letter) === 'missed') {
+            this.missed++;
+            this.removeLife();
+            for(let key of keys) {
+                if(key.textContent === letter) {
+                    key.disabled = true;
+                    key.classList.add('wrong');
+                }
+            }
+        }
+        else {
+            for(let key of keys) {
+                if(key.textContent === letter) {
+                    key.disabled = true;
+                    key.classList.add('chosen');
+                }
+            }
+        }
+    }*/
     
     checkForWin() {
         
     }
     
     removeLife() {
+        const lostHeart = document.getElementsByClassName('tries')[this.missed - 1];
+        lostHeart.style.display = 'none';
+        
         
     }
     
