@@ -1,3 +1,6 @@
+const overlay = document.getElementById('overlay');
+const title = document.querySelector('.title');
+
 class Game {
     constructor() {
         this.missed = 0;
@@ -11,8 +14,14 @@ class Game {
         this.activePhrase = this.getRandomPhrase();
         const activePhrase = this.activePhrase;
         startButton.addEventListener('click', function() {
-            overlay.style.display = 'none';
-            activePhrase.addPhraseToDisplay();
+            if(startButton.textContent === 'Start Game') {
+                overlay.style.display = 'none';
+                activePhrase.addPhraseToDisplay();
+            }
+            else {
+                console.log("It works");
+            }
+            
         });  
     }
     
@@ -37,42 +46,51 @@ class Game {
                     }
                 }
         }
+        this.checkForWin();
     }
     
-    /*handleInteraction(letter) {
-        const keys = document.getElementsByClassName('key');
-        if(this.activePhrase.checkLetter(letter) === 'missed') {
-            this.missed++;
-            this.removeLife();
-            for(let key of keys) {
-                if(key.textContent === letter) {
-                    key.disabled = true;
-                    key.classList.add('wrong');
-                }
-            }
-        }
-        else {
-            for(let key of keys) {
-                if(key.textContent === letter) {
-                    key.disabled = true;
-                    key.classList.add('chosen');
-                }
-            }
-        }
-    }*/
-    
     checkForWin() {
-        
+        const letters = document.getElementsByClassName('letter');
+        let lettersNotGuessed = 0;
+        for(let letter of letters) {
+            if(!letter.classList.contains('show')) {
+                lettersNotGuessed++;
+                break;
+            }
+        }
+        if(lettersNotGuessed === 0) {
+            overlay.classList.add('win');
+            title.textContent = "You win!!";
+            this.updateOverlay();
+            /*setTimeout(function(){alert("Congrats!!!")}, 200);*/
+        }
     }
     
     removeLife() {
         const lostHeart = document.getElementsByClassName('tries')[this.missed - 1];
+        const hearts = document.getElementsByClassName('tries');
+        let heartsRemaining = 5;
         lostHeart.style.display = 'none';
-        
-        
+        for(let heart of hearts) {
+            if(heart.style.display === 'none') {
+                heartsRemaining--;
+            }    
+        }
+        if(heartsRemaining === 0) {
+            this.gameOver();
+        }
     }
     
     gameOver() {
-        console.log("Game Over");
+        overlay.classList.add('lose');
+        title.textContent = "You ran out of hearts!!";
+        this.updateOverlay();
+    }
+    
+    updateOverlay() {
+        overlay.classList.remove('start');
+        document.getElementById('btn__reset').textContent = "Play again"
+        overlay.style.display = 'flex';
+        
     }
 }
