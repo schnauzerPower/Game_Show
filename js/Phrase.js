@@ -4,6 +4,7 @@ class Phrase {
         this.chars = this.phrase.split('');
     }
     
+    //Adds selected phrase to the display
     addPhraseToDisplay() { 
         const ul = document.querySelector('ul');
         let x = 0
@@ -21,6 +22,7 @@ class Phrase {
         }  
     }
     
+    //Checks to see if guessed letter is found in the phrase
     checkLetter(letter) {
       if(this.chars.indexOf(letter) >= 0) {
           return 'hit';
@@ -30,6 +32,7 @@ class Phrase {
       }
     }
     
+    //Shows the guessed letter(s) if found in the phrase
     showMatchedLetter(letter) {
         const lettersToShow = document.getElementsByClassName(letter);
         for(let letterToShow of lettersToShow) {
