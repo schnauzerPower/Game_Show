@@ -8,7 +8,6 @@ class Phrase {
         const ul = document.querySelector('ul');
         let x = 0
         for(let char of this.chars) {
-            
             if(char !== " ") {
                 ul.innerHTML += "<li class=letter>" + char + "</li>";
                 const li = document.querySelectorAll('.letter')[x];
@@ -19,27 +18,22 @@ class Phrase {
                 ul.innerHTML += "<li class=space><li>";
             }
             
-        } 
-        return ul;   
+        }  
     }
     
     checkLetter(letter) {
-      let numberMatched = 0;
-      for(let char of this.chars) {
-          if(char === letter) {
-              this.showMatchedLetter(letter);
-              numberMatched++;
-          }
+      if(this.chars.indexOf(letter) >= 0) {
+          return 'hit';
       }
-      if(numberMatched === 0) {
+      else {
           return 'missed';
       }
     }
     
     showMatchedLetter(letter) {
-        const poop = document.getElementsByClassName(letter);
-        for(let pee of poop) {
-            pee.classList.add('show');
+        const lettersToShow = document.getElementsByClassName(letter);
+        for(let letterToShow of lettersToShow) {
+            letterToShow.classList.add('show');
         }
         
     }

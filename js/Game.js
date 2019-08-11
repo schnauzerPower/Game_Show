@@ -1,8 +1,6 @@
 const overlay = document.getElementById('overlay');
-const title = document.querySelector('.title');
-const activePhrase = this.activePhrase;
 const keys = document.getElementsByClassName('key');
-const hearts = document.getElementsByClassName('tries');
+const hearts = document.getElementsByTagName('img');
 
 
 class Game {
@@ -17,13 +15,8 @@ class Game {
         const overlay = document.getElementById('overlay');
         this.activePhrase = this.getRandomPhrase();
         const activePhrase = this.activePhrase;
-        startButton.addEventListener('click', function() {
-            overlay.style.display = 'none';
-            if(startButton.textContent === 'Start Game') {
-                activePhrase.addPhraseToDisplay();
-            }
-           
-        });  
+        overlay.style.display = 'none';
+        activePhrase.addPhraseToDisplay();  
     }
     
     getRandomPhrase() {
@@ -34,19 +27,22 @@ class Game {
     
     handleInteraction(letter) {
         for(let key of keys) {
-                if(key.textContent === letter) {
-                    key.disabled = true;
-                    if(this.activePhrase.checkLetter(letter) === 'missed') {
-                        this.missed++;
-                        key.classList.add('wrong');
-                        this.removeLife();   
-                    }
-                    else {
-                        key.classList.add('chosen');
-                    }
+            if(key.textContent === letter) {
+                key.disabled = true;
+                if(this.activePhrase.checkLetter(letter) === 'missed') {
+                    key.classList.add('wrong');
+                    this.removeLife();   
                 }
-        }
-        this.checkForWin();
+                else {
+                    key.classList.add('chosen');
+                    this.activePhrase.showMatchedLetter(letter);
+                    if(this.checkForWin() === "winner") {
+                        this.gameOver("winner");
+                    }
+                        
+                }
+            }
+        }    
     }
     
     checkForWin() {
@@ -55,35 +51,26 @@ class Game {
         for(let letter of letters) {
             if(!letter.classList.contains('show')) {
                 lettersNotGuessed++;
-                break;
+                return 'not yet';
             }
         }
         if(lettersNotGuessed === 0) {
-            this.updateOverlay('winner');
+            return 'winner';
         }
     }
     
     removeLife() {
-        const lostHeart = document.getElementsByClassName('tries')[this.missed - 1];
-        let heartsRemaining = 5;
-        lostHeart.style.display = 'none';
-        for(let heart of hearts) {
-            if(heart.style.display === 'none') {
-                heartsRemaining--;
-            }    
-        }
-        if(heartsRemaining === 0) {
-            this.gameOver();
-            heartsRemaining = 5;
+        this.missed++;
+        const lostHeart = document.getElementsByTagName('img')[this.missed - 1];
+        lostHeart.setAttribute('src', 'images/lostHeart.png');
+        if(hearts[4].getAttribute('src') === 'images/lostHeart.png') {
+            this.gameOver('loser');
             this.missed = 0;
         }
     }
     
-    gameOver() {
-        this.updateOverlay('loser')
-    }
-    
-    updateOverlay(winnerOrLoser) {
+    gameOver(winnerOrLoser) {
+        const title = document.querySelector('.title');
         overlay.classList.remove('start');
         document.getElementById('btn__reset').textContent = "Play again"
         if(winnerOrLoser === 'winner') {
@@ -97,19 +84,16 @@ class Game {
             title.textContent = "You ran out of hearts!!";
         }
         overlay.style.display = 'flex';
-        this.prepareNewGame();
+        this.resetGameboard();
     }
     
-    prepareNewGame() {
-        this.activePhrase = this.getRandomPhrase();
-        const activePhrase = this.activePhrase;
+    resetGameboard() {
         const ul = document.querySelector('ul');
         while(ul.firstChild) {
             ul.removeChild(ul.firstChild);           
         }
-        activePhrase.addPhraseToDisplay();
         for(let heart of hearts) {
-            heart.style.display = 'inline';
+            heart.setAttribute('src', 'images/liveHeart.png');
         }
         for(let key of keys) {
             key.disabled = false;
