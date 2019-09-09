@@ -1,9 +1,9 @@
 //Begin new game when start button is clicked
+let game = new Game();
 const startButton = document.getElementById('btn__reset');
+
 startButton.addEventListener('click', function() {
-    game = new Game();
-    game.startGame();
-           
+    game.startGame();   
 });  
 
 //Interaction method is called when a letter on the keyboard is clicked
